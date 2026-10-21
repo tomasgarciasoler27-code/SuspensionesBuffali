@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel · Suspensión Buffali</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/estilos.css">
+<link rel="icon" href="/icono.png">
+<link rel="apple-touch-icon" href="/icono.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#111016">
+<style>
+.top { position: sticky; top: 0; z-index: 20; background: #111016; color: #F2F2F5; }
+.top .in { width: 100%; max-width: 100%; margin: 0; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; }
+.brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: inherit; }
+.brand { align-items: center !important; }
+.brand img { height: 40px; width: auto; display: block; }
+.brand span { font-size: 13px; opacity: .7; }
+.nav-tabs { display: flex; gap: 6px; align-items: center; }
+.nav-tab { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: var(--r); text-decoration: none; color: rgba(242,242,245,.75); font-size: 14px; font-weight: 600; border: 1px solid transparent; transition: all .15s ease; white-space: nowrap; }
+.nav-tab:hover { background: rgba(255,255,255,.1); color: #fff; }
+.nav-tab.active { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.25); }
+.tab-badge { font-family: var(--f-mono); font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 99px; background: rgba(255,255,255,.16); color: #fff; }
+.nav-tab.active .tab-badge { background: var(--accent); color: #fff; }
+.top .menu { display: flex; gap: 6px; margin-left: auto; }
+.top .menu .btn { color: inherit; background: transparent; border-color: rgba(255,255,255,.25); }
+.top .menu .btn:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
+@media (max-width: 980px) { .nav-tabs { width: 100%; overflow-x: auto; padding: 4px 0 2px; } }
+
+
+main { max-width: 1160px; margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-left)) 60px; display: grid; gap: 22px; }
+.sec-h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px; margin-bottom: 10px; }
+.sec-h h2 { font-size: 26px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.pad { padding: 18px; }
+
+/* lista de autos */
+.list { display: grid; }
+.item { display: grid; grid-template-columns: auto minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 8px 18px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+.item:last-child { border-bottom: 0; }
+.item:hover { background: var(--surface-2); }
+.item .who b { display: block; font-size: 16px; }
+.item .who span, .item .when { font-size: 14px; color: var(--muted); }
+.item .act { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.item select { padding: 6px 8px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface-2); font-size: 14px; font-weight: 600; }
+@media (max-width: 520px) { .vhead .plate.lg { --h: 60px; } .vhead h1 { font-size: 28px; } .brand span { display: none; } }
+@media (max-width: 760px) { .item { grid-template-columns: auto minmax(0, 1fr); } .item .act { grid-column: 1 / -1; justify-content: flex-start; } .item .when { grid-column: 2; } }
+.empty { padding: 26px 18px; color: var(--muted); text-align: center; }
+.stats { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.stats b { font: 600 20px var(--f-mono); color: var(--ink); display: block; }
+
+/* ficha del vehículo */
+.ficha { display: grid; gap: 20px; }
+.vhead { display: flex; flex-wrap: wrap; gap: 16px 22px; align-items: center; }
+.vhead h1 { font-size: 34px; }
+.dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 18px; margin-top: 16px; }
+.dl div span { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.dl div b { font-weight: 600; overflow-wrap: anywhere; }
+.acceso { display: grid; gap: 12px; }
+.code { font: 600 30px var(--f-mono); letter-spacing: .18em; }
+.linkbox { font: 12px var(--f-mono); word-break: break-all; color: var(--muted); }
+
+/* historial */
+.tl { display: grid; }
+.ing { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 14px 22px; padding: 18px; border-bottom: 1px solid var(--line); }
+.ing:last-child { border-bottom: 0; }
+.ing .fechas { font-size: 14px; }
+.ing .fechas b { display: block; font: 700 18px var(--f-display); }
+.ing .body { display: grid; gap: 10px; min-width: 0; }
+.ing .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 14px; color: var(--muted); }
+.ing .obs { white-space: pre-wrap; overflow-wrap: anywhere; }
+.ing .interna { white-space: pre-wrap; font-size: 14px; background: var(--taller-soft); color: var(--ink); padding: 8px 10px; border-radius: var(--r); }
+.ing .interna::before { content: "Nota interna · "; font-weight: 700; color: var(--taller); }
+@media (max-width: 600px) { .ing { grid-template-columns: 1fr; } }
+
+/* formularios */
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.full { grid-column: 1 / -1; }
+@media (max-width: 620px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+.checks label { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); font-size: 15px; cursor: pointer; }
+.checks label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.checks input { width: 17px; height: 17px; accent-color: var(--accent); }
+.gomas { border: 1.5px solid var(--ink); border-radius: 8px; padding: 12px 14px; display: grid; gap: 10px; }
+.gomas > label { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 16px; cursor: pointer; }
+.gomas input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--ink); }
+dialog { border: 0; border-radius: 12px; padding: 0; width: min(760px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+dialog::backdrop { background: rgba(10,14,20,.55); }
+dialog form { display: grid; gap: 16px; padding: 22px; }
+dialog h2 { font-size: 26px; }
+.dlg-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; position: sticky; bottom: -22px; background: var(--surface); padding: 12px 0 0; border-top: 1px solid var(--line); }
+.dlg-actions .left { margin-right: auto; }
+
+/* login */
+.login { min-height: 100dvh; display: grid; place-items: center; padding: 20px 16px; }
+.login form { width: min(380px, 100%); display: grid; gap: 14px; padding: 28px; }
+.login-logo { background: #111016; margin: -28px -28px 6px; padding: 22px; border-radius: 10px 10px 0 0; display: flex; justify-content: center; }
+.login-logo img { height: 64px; width: auto; }
+.login form.card { overflow: hidden; }
+.login h1 { font-size: 34px; text-transform: uppercase; letter-spacing: .03em; }
+
+/* ticket impreso */
+#print { display: none; }
+@media print {
+  body { background: #fff; color: #000; }
+  .top, main, dialog { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="loginView" class="login" hidden>
+  <form class="card" id="loginForm">
+    <div class="login-logo"><img src="/logo.png" alt="Suspensión Buffali" width="884" height="288"></div>
+    <h1 style="font-size:26px">Panel del taller</h1>
+    <label class="field"><span>Usuario</span><input id="lu" name="usuario" autocomplete="username" required></label>
+    <label class="field"><span>Clave</span><input id="lp" name="clave" type="password" autocomplete="current-password" required></label>
+    <div id="loginMsg" class="msg err" hidden></div>
+    <button class="btn primary" type="submit">Entrar</button>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top"><div class="in">
+    <a class="brand" href="#en-taller"><img src="/logo.png" alt="Suspensión Buffali" width="884" height="288"><span>Panel del taller</span></a>
+    <nav class="nav-tabs" aria-label="Secciones del panel">
+      <a class="nav-tab" href="#en-taller" data-tab="en-taller">En el taller ahora <span class="tab-badge" id="badge-en-taller">0</span></a>
+      <a class="nav-tab" href="#listos" data-tab="listos">Listos para retirar <span class="tab-badge" id="badge-listos">0</span></a>
+      <a class="nav-tab" href="#historial" data-tab="historial">Historial de vehículos <span class="tab-badge" id="badge-historial">0</span></a>
+    </nav>
+    <div class="menu">
+      <button class="btn small" id="btnSalir" type="button">Salir</button>
+    </div>
+  </div></header>
+  <main id="view"></main>
+</div>
+
+<dialog id="dlgIngreso"><form id="ingresoForm" novalidate></form></dialog>
+<dialog id="dlgVehiculo"><form id="vehiculoForm" novalidate></form></dialog>
+<script src="/comun.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const V = $('#view');
+const S = { cfg: null, yo: null, vehiculo: null, ingresos: [] };
+
+/* ---------- arranque ---------- */
+async function init() {
+  S.cfg = await api('/api/config').catch(() => ({ taller: { nombre: 'Suspensión Buffali' }, trabajos: [] }));
+  try {
+    S.yo = await api('/api/yo');
+    mostrarApp();
+    actualizarBadgesRemoto();
+  } catch {
+    mostrarLogin();
+  }
+}
+function mostrarLogin() { $('#app').hidden = true; $('#loginView').hidden = false; $('#lu').focus(); }
+function mostrarApp() { $('#loginView').hidden = true; $('#app').hidden = false; route(); }
+
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); const m = $('#loginMsg'); m.hidden = true;
+  try { S.yo = await api('/api/login', { method: 'POST', body: { usuario: $('#lu').value, clave: $('#lp').value } }); $('#lp').value = ''; mostrarApp(); }
+  catch (err) { m.textContent = err.message; m.hidden = false; }
+});
+$('#btnSalir')?.addEventListener('click', async () => { await api('/api/logout', { method: 'POST', body: {} }).catch(() => {}); location.hash = ''; mostrarLogin(); });
+function onAuthError(err) { if (err.status === 401) { mostrarLogin(); return true; } return false; }
+
+/* ---------- pestañas y badges ---------- */
+function actualizarBadges(d) {
+  if (!d) return;
+  const enTaller = d.enTaller ? d.enTaller.filter(i => i.estado === 'en_taller').length : 0;
+  const listos = d.enTaller ? d.enTaller.filter(i => i.estado === 'listo').length : 0;
+  const entregados = d.cantEntregados != null ? d.cantEntregados : (d.recientes ? d.recientes.length : 0);
+  const bTaller = $('#badge-en-taller'); if (bTaller) bTaller.textContent = enTaller;
+  const bListos = $('#badge-listos'); if (bListos) bListos.textContent = listos;
+  const bHistorial = $('#badge-historial') || $('#badge-entregados'); if (bHistorial) bHistorial.textContent = entregados;
+}
+function marcarTabActiva(tab) {
+  document.querySelectorAll('.nav-tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+}
+async function actualizarBadgesRemoto() {
+  try {
+    const d = await api('/api/resumen');
+    actualizarBadges(d);
+  } catch {}
+}
+
+/* ---------- rutas ---------- */
+window.addEventListener('hashchange', route);
+function route() {
+  const h = location.hash.slice(1);
+  let m;
+  if ((m = h.match(/^v\/(\d+)$/))) { marcarTabActiva(null); return verVehiculo(+m[1]); }
+  if ((m = h.match(/^buscar\/(.*)$/))) { marcarTabActiva(null); return buscar(decodeURIComponent(m[1])); }
+  if (h === 'listos') { marcarTabActiva('listos'); return verSeccion('listos'); }
+  if (h === 'historial' || h === 'entregados') { marcarTabActiva('historial'); return verSeccion('historial'); }
+  marcarTabActiva('en-taller');
+  return verSeccion('en-taller');
+}
+$('#searchForm')?.addEventListener('submit', e => { e.preventDefault(); const q = $('#q')?.value.trim(); if (q) location.hash = 'buscar/' + encodeURIComponent(q); });
+$('#btnNuevoDirecto')?.addEventListener('click', () => abrirVehiculo({}));
+
+/* ---------- vistas por sección ---------- */
+async function verSeccion(seccion) {
+  S.ultimaSeccion = seccion;
+  V.innerHTML = '<div class="empty">Cargando…</div>';
+  let d;
+  try {
+    d = await api('/api/resumen');
+  } catch (err) {
+    if (!onAuthError(err)) V.innerHTML = `<div class="msg err">${esc(err.message)}</div>`;
+    return;
+  }
+  actualizarBadges(d);
+  const hoy = hoyISO();
+  const enTaller = d.enTaller.filter(i => i.estado === 'en_taller');
+  const listos = d.enTaller.filter(i => i.estado === 'listo');
+
+  const fila = i => {
+    const dd = dias(i.fecha_entrada, hoy);
+    const wa = i.estado === 'listo' && i.vehiculo.telefono
+      ? waLink(i.vehiculo.telefono, mensajeListoWhatsApp(i))
+      : '';
+    return `<div class="item">
+      <a href="#v/${i.vehiculo.id}" aria-label="Abrir ${esc(i.vehiculo.patente)}">${chapa(i.vehiculo.patente, 'sm')}</a>
+      <a class="who" href="#v/${i.vehiculo.id}" style="text-decoration:none;color:inherit"><b>${esc([i.vehiculo.marca, i.vehiculo.modelo].filter(Boolean).join(' ') || 'Sin modelo')}</b><span>${esc(i.vehiculo.cliente || 'Sin cliente')}${i.km != null ? ' · <span class="num">' + km(i.km) + '</span>' : ''}</span></a>
+      <div class="when">Entró ${fecha(i.fecha_entrada)} · ${dd === 0 ? 'hoy' : dd === 1 ? 'hace 1 día' : `hace ${dd} días`}${i.trabajos.length ? `<br>${esc(i.trabajos.slice(0, 3).join(', '))}${i.trabajos.length > 3 ? '…' : ''}` : ''}</div>
+      <div class="act">
+        ${wa ? `<a class="btn small" href="${wa}" target="_blank" rel="noopener">Avisar por WhatsApp</a>` : ''}
+        <select data-estado="${i.id}" aria-label="Estado de ${esc(i.vehiculo.patente)}">
+          ${['en_taller', 'listo', 'entregado'].map(e => `<option value="${e}"${e === i.estado ? ' selected' : ''}>${ESTADO_TXT[e]}</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+  };
+
+  if (seccion === 'listos') {
+    V.innerHTML = `
+      <section>
+        <div class="sec-h">
+          <div><div class="eyebrow">${fecha(hoy, true)}</div><h2>Listos para retirar</h2></div>
+          <div class="stats"><div><b>${listos.length}</b>listos para retirar</div></div>
+        </div>
+        <div class="card list">${listos.length ? listos.map(fila).join('') : '<div class="empty">No hay vehículos listos para retirar en este momento.</div>'}</div>
+      </section>`;
+  } else if (seccion === 'historial' || seccion === 'entregados') {
+    let todos = [];
+    try { todos = await api('/api/vehiculos'); } catch (err) { if (!onAuthError(err)) V.innerHTML = `<div class="msg err">${esc(err.message)}</div>`; return; }
+    // Solo mostrar los vehículos entregados (no los que están actualmente en el taller o listos)
+    const vehiculos = todos.filter(v => v.ultimo_estado === 'entregado' || !v.ultimo_estado);
+
+    const renderItems = (items) => {
+      if (!items.length) return '<div class="empty">No hay vehículos entregados todavía en el historial.</div>';
+      return items.map(v => `
+        <div class="item">
+          <a href="#v/${v.id}" aria-label="Abrir ${esc(v.patente)}">${chapa(v.patente, 'sm')}</a>
+          <a class="who" href="#v/${v.id}" style="text-decoration:none;color:inherit">
+            <b>${esc([v.marca, v.modelo, v.anio].filter(Boolean).join(' ') || 'Sin modelo')}</b>
+            <span>${esc(v.cliente || 'Sin cliente')}${v.telefono ? ' · ' + esc(v.telefono) : ''}</span>
+          </a>
+          <div class="when">
+            ${v.ingresos} ingreso${v.ingresos === 1 ? '' : 's'}
+            ${v.ultimo ? ' · último ' + fecha(v.ultimo) : ''}
+            ${v.ultimo_km != null ? ' · <span class="num">' + km(v.ultimo_km) + '</span>' : ''}
+          </div>
+          <div class="act">
+            ${pill('entregado')}
+            <button class="btn small primary" data-cargar-ingreso="${v.id}">+ Cargar ingreso</button>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    V.innerHTML = `
+      <section>
+        <div class="sec-h">
+          <div><div class="eyebrow">Vehículos entregados</div><h2>Historial de vehículos</h2></div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <input id="filtroHist" placeholder="Buscar patente, cliente o modelo…" style="padding:7px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-size:14px;min-width:240px">
+            <div class="stats"><div><b>${vehiculos.length}</b>vehículos entregados</div></div>
+          </div>
+        </div>
+        <div class="card list" id="contHist">${renderItems(vehiculos)}</div>
+      </section>`;
+
+    const enlazarCargarIngreso = (lista) => {
+      V.querySelectorAll('[data-cargar-ingreso]').forEach(btn => {
+        btn.onclick = () => {
+          const veh = lista.find(x => x.id == btn.dataset.cargarIngreso);
+          if (veh) {
+            S.vehiculo = veh;
+            S.ingresos = [];
+            abrirIngreso(null);
+          }
+        };
+      });
+    };
+    enlazarCargarIngreso(vehiculos);
+
+    $('#filtroHist')?.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase().trim();
+      const filtrados = vehiculos.filter(v =>
+        (v.patente || '').toLowerCase().includes(q) ||
+        (v.cliente || '').toLowerCase().includes(q) ||
+        `${v.marca || ''} ${v.modelo || ''}`.toLowerCase().includes(q)
+      );
+      $('#contHist').innerHTML = renderItems(filtrados);
+      enlazarCargarIngreso(filtrados);
+    });
+  } else {
+    V.innerHTML = `
+      <section>
+        <div class="sec-h">
+          <div><div class="eyebrow">${fecha(hoy, true)}</div><h2>En el taller ahora</h2></div>
+          <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+            <button class="btn small primary" id="btnSecNuevo">+ Cargar ingreso</button>
+            <div class="stats"><div><b>${enTaller.length}</b>en trabajo</div><div><b>${listos.length}</b>listos para retirar</div><div><b>${d.totales.vehiculos}</b>vehículos registrados</div></div>
+          </div>
+        </div>
+        <div class="card list">${enTaller.length ? enTaller.map(fila).join('') : '<div class="empty">No hay vehículos en trabajo. Podés tocar el botón "+ Cargar ingreso" o buscar una patente arriba.</div>'}</div>
+      </section>`;
+    $('#btnSecNuevo')?.addEventListener('click', () => abrirVehiculo({}));
+  }
+
+  V.querySelectorAll('[data-estado]').forEach(sel => sel.addEventListener('change', async () => {
+    const body = { estado: sel.value };
+    const i = d.enTaller.find(x => x.id == sel.dataset.estado);
+    if (sel.value === 'entregado' && !i.fecha_salida) body.fecha_salida = hoyISO();
+    try {
+      await api('/api/ingresos/' + sel.dataset.estado, { method: 'PUT', body });
+      verSeccion(seccion);
+    } catch (err) {
+      if (!onAuthError(err)) alertBox(err.message);
+    }
+  }));
+}
+function alertBox(t) { const m = document.createElement('div'); m.className = 'msg err'; m.textContent = t; V.prepend(m); setTimeout(() => m.remove(), 6000); }
+
+/* ---------- búsqueda ---------- */
+const PAT_RE = /^([A-Z]{3}\d{3}|[A-Z]{2}\d{3}[A-Z]{2}|[A-Z]\d{3}[A-Z]{3}|\d{3}[A-Z]{3})$/;
+async function buscar(q) {
+  $('#q').value = q;
+  V.innerHTML = '<div class="empty">Buscando…</div>';
+  let rows; try { rows = await api('/api/vehiculos?q=' + encodeURIComponent(q)); } catch (err) { if (!onAuthError(err)) V.innerHTML = `<div class="msg err">${esc(err.message)}</div>`; return; }
+  const pat = q.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const exacto = rows.find(r => r.patente === pat);
+  if (exacto && rows.length === 1) { location.replace('#v/' + exacto.id); return; }
+  const puedeCrear = PAT_RE.test(pat) && !exacto;
+  V.innerHTML = `
+    <section>
+      <div class="sec-h"><h2>Resultados para “${esc(q)}”</h2></div>
+      ${puedeCrear ? `<div class="card pad" style="display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;margin-bottom:16px">${chapa(pat)}<div style="flex:1;min-width:200px"><b>Esta patente no está registrada.</b><div class="muted">Cargá el vehículo para registrar su primer ingreso.</div></div><button class="btn primary" id="btnNuevoV">Registrar vehículo</button></div>` : ''}
+      <div class="card list">${rows.length ? rows.map(v => `<a class="item" href="#v/${v.id}">${chapa(v.patente, 'sm')}<div class="who"><b>${esc([v.marca, v.modelo, v.anio].filter(Boolean).join(' ') || 'Sin modelo')}</b><span>${esc(v.cliente || 'Sin cliente')}</span></div><div class="when">${v.ingresos} ingreso${v.ingresos == 1 ? '' : 's'}${v.ultimo ? ' · último ' + fecha(v.ultimo) : ''}</div><div class="act"></div></a>`).join('') : `<div class="empty">${puedeCrear ? 'No hay otros vehículos parecidos.' : 'No encontramos nada. Para registrar un vehículo nuevo, escribí la patente completa (ej. AB123CD o ABC123).'}</div>`}</div>
+    </section>`;
+  $('#btnNuevoV')?.addEventListener('click', () => abrirVehiculo({ patente: pat }));
+}
+
+/* ---------- ficha ---------- */
+async function verVehiculo(id) {
+  V.innerHTML = '<div class="empty">Cargando…</div>';
+  let d; try { d = await api('/api/vehiculos/' + id); } catch (err) { if (!onAuthError(err)) V.innerHTML = `<div class="msg err">${esc(err.message)}</div>`; return; }
+  S.vehiculo = d.vehiculo; S.ingresos = d.ingresos;
+  const v = d.vehiculo, act = d.ingresos.find(i => i.estado !== 'entregado');
+  const ultimoKm = d.ingresos.find(i => i.km != null)?.km;
+  const esEnTaller = act ? act.estado === 'en_taller' : false;
+  const esListo = act ? act.estado === 'listo' : false;
+
+  if (esEnTaller) {
+    // Vista completa para "En el taller ahora" (con edición pero sin link para el cliente)
+    V.innerHTML = `
+      <div class="ficha">
+        <section class="card pad">
+          <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><h1>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || 'Vehículo sin modelo')}</h1><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div>${act ? pill(act.estado) : ''}</div>
+          <div class="dl">
+            <div><span>Cliente</span><b>${esc(v.cliente || '—')}</b></div>
+            <div><span>Teléfono</span><b>${esc(v.telefono || '—')}</b></div>
+            <div><span>Último km</span><b class="num">${km(ultimoKm)}</b></div>
+            <div><span>Ingresos</span><b class="num">${d.ingresos.length}</b></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
+            <button class="btn primary" id="btnIngreso">Editar ingreso actual</button>
+            <button class="btn" id="btnEditarV">Editar datos</button>
+            ${v.telefono ? `<a class="btn" href="${waLink(v.telefono)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+          </div>
+        </section>
+        <section>
+          <div class="sec-h"><h2>Historial</h2>${d.ingresos.length && act ? '<button class="btn small" id="btnIngreso2">Registrar otro ingreso</button>' : ''}</div>
+          <div class="card tl">${d.ingresos.length ? d.ingresos.map(i => ingresoHTML(i, true)).join('') : '<div class="empty">Sin ingresos todavía. Registrá el primero con el botón de arriba.</div>'}</div>
+        </section>
+      </div>`;
+    const abrirAct = () => abrirIngreso(act || null);
+    if ($('#btnIngreso')) $('#btnIngreso').onclick = abrirAct;
+    if ($('#btnIngreso2')) $('#btnIngreso2').onclick = () => abrirIngreso(null);
+    if ($('#btnEditarV')) $('#btnEditarV').onclick = () => abrirVehiculo(v);
+    V.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => abrirIngreso(S.ingresos.find(i => i.id == b.dataset.edit)));
+  } else if (esListo) {
+    // Vista para "Listos para retirar": solo lectura informativa y botón de WhatsApp con detalle
+    const waListo = v.telefono ? waLink(v.telefono, mensajeListoWhatsApp({ ...act, vehiculo: v })) : '';
+    V.innerHTML = `
+      <div class="ficha">
+        <section class="card pad">
+          <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><h1>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || 'Vehículo sin modelo')}</h1><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div>${pill('listo')}</div>
+          <div class="dl">
+            <div><span>Cliente</span><b>${esc(v.cliente || '—')}</b></div>
+            <div><span>Teléfono</span><b>${esc(v.telefono || '—')}</b></div>
+            <div><span>Último km</span><b class="num">${km(ultimoKm)}</b></div>
+            <div><span>Ingresos</span><b class="num">${d.ingresos.length}</b></div>
+          </div>
+          ${waListo ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px"><a class="btn primary" href="${waListo}" target="_blank" rel="noopener">Avisar por WhatsApp</a></div>` : ''}
+        </section>
+        <section>
+          <div class="sec-h"><h2>Historial</h2></div>
+          <div class="card tl">${d.ingresos.length ? d.ingresos.map(i => ingresoHTML(i, false)).join('') : '<div class="empty">Sin ingresos todavía.</div>'}</div>
+        </section>
+      </div>`;
+  } else {
+    // Vista para vehículo en Historial (ya entregado): datos cargados + botón para registrar nuevo ingreso cuando vuelva
+    V.innerHTML = `
+      <div class="ficha">
+        <section class="card pad">
+          <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><h1>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || 'Vehículo sin modelo')}</h1><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div>${pill('entregado')}</div>
+          <div class="dl">
+            <div><span>Cliente</span><b>${esc(v.cliente || '—')}</b></div>
+            <div><span>Teléfono</span><b>${esc(v.telefono || '—')}</b></div>
+            <div><span>Último km</span><b class="num">${km(ultimoKm)}</b></div>
+            <div><span>Ingresos</span><b class="num">${d.ingresos.length}</b></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
+            <button class="btn primary" id="btnReingreso">+ Cargar nuevo ingreso</button>
+            <button class="btn" id="btnEditarV">Editar datos</button>
+            ${v.telefono ? `<a class="btn" href="${waLink(v.telefono)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+          </div>
+        </section>
+        <section>
+          <div class="sec-h"><h2>Historial de servicios anteriores</h2></div>
+          <div class="card tl">${d.ingresos.length ? d.ingresos.map(i => ingresoHTML(i, false)).join('') : '<div class="empty">Sin ingresos registrados.</div>'}</div>
+        </section>
+      </div>`;
+    if ($('#btnReingreso')) $('#btnReingreso').onclick = () => abrirIngreso(null);
+    if ($('#btnEditarV')) $('#btnEditarV').onclick = () => abrirVehiculo(v);
+  }
+  if (S.abrirIngresoPara === v.id) { S.abrirIngresoPara = null; abrirIngreso(null); }
+}
+function nombrePila(c) { return (c || '').split(' ')[0] || ''; }
+function mensajeListoWhatsApp(i) {
+  const v = i.vehiculo;
+  const nombre = nombrePila(v.cliente);
+  const auto = [v.marca, v.modelo].filter(Boolean).join(' ') || 'vehículo';
+  const taller = S.cfg?.taller?.nombre || 'Suspensión Buffali';
+  const horario = S.cfg?.taller?.horario ? `\n🕒 Horario de retiro: ${S.cfg.taller.horario}.` : '';
+  const dir = S.cfg?.taller?.direccion ? `\n📍 Dirección: ${S.cfg.taller.direccion}${S.cfg.taller.ciudad ? ', ' + S.cfg.taller.ciudad : ''}.` : '';
+
+  const listaTrabajos = [];
+  if (Array.isArray(i.trabajos)) {
+    i.trabajos.forEach(t => { if (t) listaTrabajos.push(`• ${t}`); });
+  }
+  if (i.cambio_gomas) {
+    listaTrabajos.push(`• Cambio de gomas${i.gomas_detalle ? ': ' + i.gomas_detalle : ''}`);
+  }
+  const bloqueTrabajos = listaTrabajos.length
+    ? `\n\n📋 *Trabajos realizados:*\n${listaTrabajos.join('\n')}`
+    : '';
+
+  const precio = (i.importe != null && i.importe !== '')
+    ? `\n\n💵 *Total:* ${pesos(i.importe)}`
+    : '';
+
+  return `Hola ${nombre}, te escribimos de *${taller}*: tu *${auto}* (${v.patente}) ya está listo para retirar.${bloqueTrabajos}${precio}${horario}${dir}`;
+}
+function ingresoHTML(i, puedeEditar = true) {
+  const n = i.fecha_salida ? dias(i.fecha_entrada, i.fecha_salida) : null;
+  return `<article class="ing">
+    <div class="fechas"><b>${fecha(i.fecha_entrada)}</b><span class="muted">${i.fecha_salida ? 'Salió ' + fecha(i.fecha_salida) + (n ? ` · ${n} día${n === 1 ? '' : 's'}` : '') : 'Sin fecha de salida'}</span></div>
+    <div class="body">
+      <div class="meta">
+        ${pill(i.estado)}
+        <span class="num">${km(i.km)}</span>
+        ${i.importe != null ? `<span class="num">${pesos(i.importe)}</span>` : ''}
+        <span>${i.creado_por ? 'Cargó ' + esc(i.creado_por) : ''}</span>
+        ${puedeEditar ? `<button class="btn small" data-edit="${i.id}" style="margin-left:auto">Editar</button>` : ''}
+      </div>
+      ${i.trabajos.length || i.cambio_gomas ? `<div class="chips">${i.cambio_gomas ? `<span class="chip gomas">Cambio de gomas${i.gomas_detalle ? ': ' + esc(i.gomas_detalle) : ''}</span>` : ''}${i.trabajos.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>` : ''}
+      ${i.observaciones ? `<div class="obs">${esc(i.observaciones)}</div>` : ''}
+      ${i.notas_internas ? `<div class="interna">${esc(i.notas_internas)}</div>` : ''}
+      ${i.proximo_km || i.proxima_fecha ? `<div class="muted" style="font-size:14px">Próximo control: ${[i.proximo_km ? km(i.proximo_km) : '', i.proxima_fecha ? fecha(i.proxima_fecha) : ''].filter(Boolean).join(' o ')}</div>` : ''}
+    </div>
+  </article>`;
+}
+
+/* ---------- diálogo vehículo ---------- */
+function abrirVehiculo(v) {
+  const nuevo = !v.id, f = $('#vehiculoForm'), dlg = $('#dlgVehiculo');
+  f.innerHTML = `
+    <div class="eyebrow">${nuevo ? 'Vehículo nuevo' : 'Editar vehículo'}</div>
+    <h2>${nuevo ? 'Registrar vehículo' : esc(v.patente)}</h2>
+    <div class="grid3">
+      <label class="field"><span>Patente</span><input id="v-pat" name="patente" value="${esc(v.patente || '')}" required style="font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.08em"></label>
+      <label class="field"><span>Marca</span><input id="v-marca" name="marca" value="${esc(v.marca || '')}" placeholder="Volkswagen"></label>
+      <label class="field"><span>Modelo</span><input id="v-modelo" name="modelo" value="${esc(v.modelo || '')}" placeholder="Gol Trend"></label>
+      <label class="field"><span>Año</span><input id="v-anio" name="anio" value="${esc(v.anio || '')}" inputmode="numeric" maxlength="4"></label>
+      <label class="field"><span>Color</span><input id="v-color" name="color" value="${esc(v.color || '')}"></label>
+      <span></span>
+      <label class="field"><span>Cliente</span><input id="v-cliente" name="cliente" value="${esc(v.cliente || '')}" placeholder="Nombre y apellido"></label>
+      <label class="field"><span>Teléfono / WhatsApp</span><input id="v-tel" name="telefono" value="${esc(v.telefono || '')}" inputmode="tel" placeholder="358 4123456"></label>
+    </div>
+    <div id="vMsg" class="msg err" hidden></div>
+    <div class="dlg-actions">
+      ${!nuevo ? '<button class="btn danger small left" type="button" id="vDel">Eliminar vehículo</button>' : ''}
+      <button class="btn" type="button" value="cancel" id="vCancel">Cancelar</button>
+      <button class="btn primary" type="submit">${nuevo ? 'Registrar y cargar ingreso' : 'Guardar'}</button>
+    </div>`;
+  $('#vCancel').onclick = () => dlg.close();
+  const del = $('#vDel'); if (del) del.onclick = async () => {
+    if (del.dataset.c !== '1') { del.dataset.c = '1'; del.textContent = 'Se borra con todo su historial. Tocá de nuevo para confirmar'; return; }
+    try { await api('/api/vehiculos/' + v.id, { method: 'DELETE' }); dlg.close(); location.hash = 'en-taller'; } catch (err) { $('#vMsg').textContent = err.message; $('#vMsg').hidden = false; }
+  };
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const body = Object.fromEntries(new FormData(f));
+    try {
+      const r = await api(nuevo ? '/api/vehiculos' : '/api/vehiculos/' + v.id, { method: nuevo ? 'POST' : 'PUT', body });
+      dlg.close();
+      if (nuevo) { S.abrirIngresoPara = r.id; location.hash = 'v/' + r.id; }
+      else verVehiculo(v.id);
+    } catch (err) { $('#vMsg').textContent = err.message; $('#vMsg').hidden = false; }
+  };
+  dlg.showModal(); (nuevo && v.patente ? $('#v-marca') : $('#v-pat')).focus();
+}
+
+/* ---------- diálogo ingreso ---------- */
+function abrirIngreso(i) {
+  const nuevo = !i, v = S.vehiculo, f = $('#ingresoForm'), dlg = $('#dlgIngreso');
+  i = i || { fecha_entrada: hoyISO(), estado: 'en_taller', trabajos: [], cambio_gomas: false };
+  const previoKm = S.ingresos.filter(x => x.id !== i.id && x.km != null && x.fecha_entrada <= (i.fecha_entrada || hoyISO()))[0]?.km;
+  const opciones = [...new Set([...(S.cfg.trabajos || []), ...i.trabajos])];
+  f.innerHTML = `
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${chapa(v.patente, 'sm')}<div><div class="eyebrow">${nuevo ? 'Nuevo ingreso' : 'Editar ingreso'}</div><h2>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || v.patente)}</h2></div></div>
+    <div class="grid3">
+      <label class="field"><span>Fecha de entrada</span><input type="date" id="i-ent" name="fecha_entrada" value="${i.fecha_entrada || ''}" required></label>
+      <label class="field"><span>Fecha de salida</span><input type="date" id="i-sal" name="fecha_salida" value="${i.fecha_salida || ''}"><small>Vacío si todavía está en el taller</small></label>
+      <label class="field"><span>Estado</span><select id="i-est" name="estado">${['en_taller', 'listo', 'entregado'].map(e => `<option value="${e}"${e === i.estado ? ' selected' : ''}>${ESTADO_TXT[e]}</option>`).join('')}</select></label>
+      <label class="field"><span>Kilometraje</span><input id="i-km" name="km" inputmode="numeric" value="${i.km ?? ''}" placeholder="${previoKm != null ? 'Anterior: ' + previoKm : 'ej. 84500'}" style="font-family:var(--f-mono)"><small id="kmWarn">${previoKm != null ? 'Último registrado: ' + km(previoKm) : ''}</small></label>
+      <label class="field"><span>Importe (interno)</span><input id="i-imp" name="importe" inputmode="numeric" value="${i.importe ?? ''}" placeholder="$" style="font-family:var(--f-mono)"><small>${S.cfg.mostrarImportesAlCliente ? 'El cliente lo ve' : 'El cliente no lo ve'}</small></label>
+    </div>
+    <div class="field"><span>Trabajos realizados</span>
+      <div class="checks">${opciones.map((t, k) => `<label><input type="checkbox" name="trabajo" value="${esc(t)}" id="t-${k}"${i.trabajos.includes(t) ? ' checked' : ''}>${esc(t)}</label>`).join('')}</div>
+      <input id="i-otro" placeholder="Otro trabajo (escribilo y apretá Enter)" style="margin-top:6px">
+    </div>
+    <div class="gomas">
+      <label><input type="checkbox" id="i-gomas" name="cambio_gomas"${i.cambio_gomas ? ' checked' : ''}> Se hizo cambio de gomas</label>
+      <label class="field" id="gomasDet" ${i.cambio_gomas ? '' : 'hidden'}><span>Detalle de las gomas</span><input id="i-gdet" name="gomas_detalle" value="${esc(i.gomas_detalle || '')}" placeholder="ej. 2 delanteras, Pirelli P400 185/65 R15"></label>
+    </div>
+    <label class="field"><span>Observaciones para el cliente</span><textarea id="i-obs" name="observaciones" placeholder="Qué se hizo, qué se encontró, qué conviene revisar más adelante…">${esc(i.observaciones || '')}</textarea><small>Esto lo ve el cliente en su historial.</small></label>
+    <label class="field"><span>Notas internas</span><textarea id="i-int" name="notas_internas" style="min-height:60px" placeholder="Solo para el taller: repuestos, proveedor, pendientes…">${esc(i.notas_internas || '')}</textarea></label>
+    <div class="grid2">
+      <label class="field"><span>Próximo control (km)</span><input id="i-pkm" name="proximo_km" inputmode="numeric" value="${i.proximo_km ?? ''}" style="font-family:var(--f-mono)"></label>
+      <label class="field"><span>Próximo control (fecha)</span><input type="date" id="i-pf" name="proxima_fecha" value="${i.proxima_fecha || ''}"></label>
+    </div>
+    <div id="iMsg" class="msg err" hidden></div>
+    <div class="dlg-actions">
+      ${!nuevo ? '<button class="btn danger small left" type="button" id="iDel">Eliminar ingreso</button>' : ''}
+      <button class="btn" type="button" id="iCancel">Cancelar</button>
+      <button class="btn primary" type="submit">${nuevo ? 'Guardar ingreso' : 'Guardar cambios'}</button>
+    </div>`;
+  $('#iCancel').onclick = () => dlg.close();
+  $('#i-gomas').onchange = e => { $('#gomasDet').hidden = !e.target.checked; if (e.target.checked) $('#i-gdet').focus(); };
+  $('#i-est').onchange = e => { if (e.target.value === 'entregado' && !$('#i-sal').value) $('#i-sal').value = hoyISO(); };
+  $('#i-km').oninput = e => { const n = +e.target.value.replace(/\D/g, ''); const w = $('#kmWarn'); if (previoKm != null && n && n < previoKm) { w.textContent = `Ojo: es menor al último registrado (${km(previoKm)})`; w.style.color = 'var(--taller)'; } else { w.textContent = previoKm != null ? 'Último registrado: ' + km(previoKm) : ''; w.style.color = ''; } };
+  $('#i-otro').onkeydown = e => {
+    if (e.key !== 'Enter') return; e.preventDefault(); const t = e.target.value.trim(); if (!t) return;
+    const lab = document.createElement('label'); lab.innerHTML = `<input type="checkbox" name="trabajo" checked> ${esc(t)}`; lab.querySelector('input').value = t;
+    f.querySelector('.checks').append(lab); e.target.value = '';
+  };
+  const del = $('#iDel'); if (del) del.onclick = async () => {
+    if (del.dataset.c !== '1') { del.dataset.c = '1'; del.textContent = 'Tocá de nuevo para eliminar'; return; }
+    try { await api('/api/ingresos/' + i.id, { method: 'DELETE' }); dlg.close(); verVehiculo(v.id); } catch (err) { $('#iMsg').textContent = err.message; $('#iMsg').hidden = false; }
+  };
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const otro = $('#i-otro').value.trim();
+    const fd = new FormData(f);
+    const body = {
+      fecha_entrada: fd.get('fecha_entrada'), fecha_salida: fd.get('fecha_salida') || null, estado: fd.get('estado'),
+      km: fd.get('km'), importe: fd.get('importe'), trabajos: [...fd.getAll('trabajo'), ...(otro ? [otro] : [])],
+      cambio_gomas: !!fd.get('cambio_gomas'), gomas_detalle: fd.get('cambio_gomas') ? fd.get('gomas_detalle') : '',
+      observaciones: fd.get('observaciones'), notas_internas: fd.get('notas_internas'), proximo_km: fd.get('proximo_km'), proxima_fecha: fd.get('proxima_fecha') || null,
+    };
+    if (body.estado === 'entregado' && !body.fecha_salida) body.fecha_salida = hoyISO();
+    try {
+      await api(nuevo ? `/api/vehiculos/${v.id}/ingresos` : '/api/ingresos/' + i.id, { method: nuevo ? 'POST' : 'PUT', body });
+      if (nuevo && !S.ingresos.length) S.sugerirLink = v.id;
+      dlg.close(); verVehiculo(v.id);
+    } catch (err) { $('#iMsg').textContent = err.message; $('#iMsg').hidden = false; }
+  };
+  dlg.showModal(); $(nuevo ? '#i-km' : '#i-obs').focus();
+}
+
+init();
+</script>
+</body>
+</html>

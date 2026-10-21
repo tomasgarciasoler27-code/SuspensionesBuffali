@@ -1,0 +1,29 @@
+{
+  "taller": {
+    "nombre": "Suspensión Buffali",
+    "ciudad": "Río Cuarto, Córdoba",
+    "direccion": "Humberto Primero 773",
+    "telefono": "(0358) 462-4013",
+    "whatsapp": "",
+    "horario": "Lunes a viernes de 8 a 16 h",
+    "mapa": "https://maps.app.goo.gl/uXT4E9LAs5BZrTNg8"
+  },
+  "requerirCodigo": false,
+  "mostrarImportesAlCliente": false,
+  "trabajos": [
+    "Amortiguadores delanteros",
+    "Amortiguadores traseros",
+    "Espirales",
+    "Bujes",
+    "Rótulas",
+    "Extremos de dirección",
+    "Bieletas",
+    "Parrillas",
+    "Cazoletas / soportes",
+    "Alineación",
+    "Balanceo",
+    "Rotación de neumáticos",
+    "Frenos",
+    "Revisión de tren delantero"
+  ]
+}

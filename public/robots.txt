@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /consulta
+Disallow: /panel
+Disallow: /panel/
+Disallow: /a/
+Disallow: /api/
+
+Sitemap: https://historial.suspensionbuffali.com.ar/sitemap.xml

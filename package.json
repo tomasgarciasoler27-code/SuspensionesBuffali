@@ -1,0 +1,14 @@
+{
+  "name": "suspension-buffali",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Historial de vehículos del taller Suspensión Buffali (Río Cuarto)",
+  "main": "server.js",
+  "engines": { "node": ">=22.11" },
+  "scripts": {
+    "start": "node --experimental-sqlite server.js",
+    "test": "node --experimental-sqlite test.js",
+    "ejemplo": "node --experimental-sqlite datos-ejemplo.js",
+    "crear-usuario": "node --experimental-sqlite crear-usuario.js"
+  }
+}

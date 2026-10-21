@@ -1,0 +1,89 @@
+/* Suspensión Buffali — estilos compartidos
+   Concepto: planilla de taller + chapa patente Mercosur como pieza central */
+:root {
+  --bg: #ECEEF1;
+  --surface: #FFFFFF;
+  --surface-2: #F5F6F8;
+  --ink: #12161C;
+  --muted: #5A6371;
+  --line: #D3D8DF;
+  --accent: #123A94;        /* azul franja Mercosur */
+  --accent-soft: #DCE4F7;
+  --on-accent: #FFFFFF;
+  --taller: #A86A00;        /* en taller */
+  --taller-soft: #FBEFD5;
+  --listo: #1E7A45;         /* listo para retirar */
+  --listo-soft: #DAF0E2;
+  --danger: #B42828;
+  --danger-soft: #F8DEDE;
+  --plate-bg: #FFFFFF;
+  --plate-ink: #111111;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 6px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0F1216; --surface: #171B21; --surface-2: #1D222A; --ink: #E6E9EE; --muted: #98A1AE; --line: #2A313B;
+    --accent: #7FA1F5; --accent-soft: #1B2747; --on-accent: #0B1020;
+    --taller: #E9B04B; --taller-soft: #3A2C10; --listo: #63C98D; --listo-soft: #12301F;
+    --danger: #EC7C7C; --danger-soft: #3B1A1A;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--f-body); }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+
+/* botones y campos */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; font-size: 15px; border-radius: var(--r); padding: 10px 16px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.small { padding: 6px 11px; font-size: 14px; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field > span { font-size: 13px; font-weight: 600; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); font-size: 16px;
+}
+.field textarea { resize: vertical; min-height: 84px; line-height: 1.45; }
+.field small { font-size: 12px; color: var(--muted); }
+.msg { font-size: 14px; padding: 10px 12px; border-radius: var(--r); }
+.msg.err { background: var(--danger-soft); color: var(--danger); }
+.msg.ok { background: var(--listo-soft); color: var(--listo); }
+.msg.warn { background: var(--taller-soft); color: var(--taller); }
+
+/* estado */
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill.en_taller { background: var(--taller-soft); color: var(--taller); }
+.pill.listo { background: var(--listo-soft); color: var(--listo); }
+.pill.entregado { background: var(--surface-2); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13px; padding: 3px 9px; border-radius: 4px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.chip.gomas { background: var(--ink); color: var(--surface); }
+
+/* chapa patente: Mercosur (AB123CD / A123BCD) o vieja (ABC123 / 123ABC) */
+.plate { --h: 46px; display: inline-flex; flex-direction: column; height: var(--h); min-width: calc(var(--h) * 3.1); border-radius: calc(var(--h) * .12); overflow: hidden; background: var(--plate-bg); color: var(--plate-ink); box-shadow: 0 0 0 1.5px #1A1A1A, 0 1px 0 2px rgba(0,0,0,.08); font-family: var(--f-display); flex: none; }
+.plate .band { height: 24%; background: #1446A0; color: #fff; font-size: calc(var(--h) * .13); font-weight: 600; letter-spacing: .14em; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+.plate .chars { flex: 1; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: calc(var(--h) * .56); letter-spacing: .06em; padding: 0 calc(var(--h) * .2); line-height: 1; }
+.plate.old { background: #121212; color: #F2F2F2; box-shadow: 0 0 0 2px #8A8F96; }
+.plate.old .band { display: none; }
+.plate.lg { --h: 78px; }
+.plate.sm { --h: 34px; }
+.plate.sm .band { font-size: 5px; letter-spacing: .1em; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

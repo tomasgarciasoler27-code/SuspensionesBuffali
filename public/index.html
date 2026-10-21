@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Historial de tu Vehículo | Suspensión Buffali · Taller en Río Cuarto</title>
+<meta name="description" content="Consultá los trabajos, revisiones mecánicas, tren delantero, amortiguadores y estado de tu auto en Suspensión Buffali (Río Cuarto, Córdoba).">
+<meta name="theme-color" content="#123A94">
+<link rel="canonical" href="https://historial.suspensionbuffali.com.ar/consulta">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Historial de tu Vehículo · Suspensión Buffali">
+<meta property="og:description" content="Consultá el estado y las visitas de tu vehículo en Suspensión Buffali (Río Cuarto). Especialistas en suspensión, tren delantero, alineación y frenos.">
+<meta property="og:image" content="https://historial.suspensionbuffali.com.ar/logo.png">
+<meta property="og:url" content="https://historial.suspensionbuffali.com.ar/consulta">
+<meta property="og:site_name" content="Suspensión Buffali">
+<meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Historial de tu Vehículo · Suspensión Buffali">
+<meta name="twitter:description" content="Consultá el estado y las visitas de tu vehículo en Suspensión Buffali (Río Cuarto).">
+<meta name="twitter:image" content="https://historial.suspensionbuffali.com.ar/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/estilos.css">
+<link rel="icon" href="/icono.png">
+<link rel="apple-touch-icon" href="/icono.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AutoRepair",
+  "name": "Suspensión Buffali",
+  "image": "https://historial.suspensionbuffali.com.ar/logo.png",
+  "telephone": "+54-358-462-4013",
+  "url": "https://historial.suspensionbuffali.com.ar",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Humberto Primero 773",
+    "addressLocality": "Río Cuarto",
+    "addressRegion": "Córdoba",
+    "addressCountry": "AR"
+  },
+  "openingHours": "Mo-Fr 08:00-16:00",
+  "hasMap": "https://maps.app.goo.gl/uXT4E9LAs5BZrTNg8",
+  "serviceArea": "Río Cuarto, Córdoba",
+  "areaServed": "Río Cuarto"
+}
+</script>
+<style>
+.band-top { background: var(--ink); color: var(--surface); }
+@media (prefers-color-scheme: dark) { .band-top { background: #05070A; color: var(--ink); } }
+.band-top .in { max-width: 720px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.band-top { background: #111016; }
+.band-top .logo img { display: block; height: clamp(46px, 13vw, 64px); width: auto; }
+.band-top span { white-space: nowrap; }
+.band-top span { font-size: 13px; opacity: .7; }
+main { max-width: 720px; margin: 0 auto; padding: 26px max(16px, env(safe-area-inset-right)) 48px max(16px, env(safe-area-inset-left)); display: grid; gap: 22px; }
+h1 { font-size: clamp(32px, 8vw, 44px); }
+.lead { color: var(--muted); margin: 8px 0 0; max-width: 34em; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+form.consulta { padding: 22px; display: grid; gap: 18px; }
+
+/* el campo de patente se ve como la chapa */
+.plate-input { --h: 92px; position: relative; width: min(100%, 330px); height: var(--h); border-radius: 10px; background: #fff; box-shadow: 0 0 0 2px #1A1A1A; overflow: hidden; display: flex; flex-direction: column; }
+.plate-input .band { height: 22%; background: #1446A0; color: #fff; font: 600 11px var(--f-display); letter-spacing: .18em; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+.plate-input input { flex: 1; border: 0; background: transparent; text-align: center; font: 700 46px var(--f-display); letter-spacing: .08em; color: #111; text-transform: uppercase; width: 100%; min-width: 0; padding: 0 10px; }
+.plate-input input::placeholder { color: #C3C7CD; }
+.plate-input:focus-within { box-shadow: 0 0 0 2px #1A1A1A, 0 0 0 5px var(--accent); }
+.code-input { font: 600 26px var(--f-mono) !important; letter-spacing: .3em; text-transform: uppercase; max-width: 240px; text-align: center; }
+
+.status { display: grid; gap: 4px; padding: 16px 18px; border-radius: 10px; }
+.status b { font: 700 22px var(--f-display); }
+.status.en_taller { background: var(--taller-soft); color: var(--taller); }
+.status.listo { background: var(--listo-soft); color: var(--listo); }
+.status span { color: var(--ink); font-size: 15px; }
+
+.vhead { padding: 22px; display: flex; flex-wrap: wrap; gap: 16px 22px; align-items: center; }
+.vhead h2 { font-size: 30px; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .vhead .plate.lg { --h: 64px; } .vhead > div { flex-basis: 100%; } .vhead h2 { font-size: 28px; } }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.facts div { padding: 14px 18px; border-left: 1px solid var(--line); min-width: 0; }
+.facts div:first-child { border-left: 0; }
+.facts span { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+.facts b { font: 500 17px var(--f-mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .facts { grid-template-columns: 1fr; } .facts div { border-left: 0; border-top: 1px solid var(--line); } .facts div:first-child { border-top: 0; } }
+
+.tl { display: grid; }
+.ing { position: relative; padding: 18px 18px 18px 46px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+.ing:last-child { border-bottom: 0; }
+.ing::before { content: ""; position: absolute; left: 22px; top: 24px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.ing::after { content: ""; position: absolute; left: 26px; top: 40px; bottom: -20px; width: 2px; background: var(--line); }
+.ing:last-child::after { display: none; }
+.ing .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; align-items: baseline; }
+.ing .head b { font: 700 20px var(--f-display); }
+.ing .meta { font-size: 14px; color: var(--muted); }
+.ing .obs { white-space: pre-wrap; overflow-wrap: anywhere; }
+.contacto { padding: 18px 22px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.btn-volver { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: var(--r); background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; border: 1px solid rgba(255,255,255,.2); transition: background .15s ease; cursor: pointer; }
+.btn-volver:hover { background: rgba(255,255,255,.24); color: #fff; }
+footer { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); text-align: center; font-size: 13px; color: var(--muted); padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+</style>
+</head>
+<body>
+<header class="band-top"><div class="in"><a href="/consulta" class="logo"><img src="/logo.png" alt="Suspensión Buffali" width="884" height="288"></a><div style="display:flex;align-items:center;gap:14px"><a href="/consulta" class="btn-volver" id="topVolver" hidden>← Volver</a><span id="tCity">Río Cuarto</span></div></div></header>
+
+<main id="view">
+  <section>
+    <div class="eyebrow">Historial del vehículo</div>
+    <h1>Todo lo que le hicimos a tu auto</h1>
+    <p class="lead" id="lead">Escribí la patente de tu vehículo y tocá <b>Ver historial</b>. Vas a ver si está en el taller o listo para retirar, y cada visita: fechas, kilometraje, trabajos realizados y observaciones.</p>
+  </section>
+  <form class="card consulta" id="f" novalidate>
+    <label class="field"><span>Patente</span>
+      <div class="plate-input"><div class="band">República Argentina</div><input id="pat" name="patente" placeholder="AB 123 CD" maxlength="9" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Patente"></div>
+    </label>
+    <label class="field" id="codeField"><span>Código del ticket</span><input id="cod" name="codigo" class="code-input" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="······"></label>
+    <div id="msg" class="msg err" hidden></div>
+    <div><button class="btn primary" type="submit" style="padding:12px 22px;font-size:16px">Ver historial</button></div>
+  </form>
+  <section class="card pad" style="padding:22px;display:grid;gap:10px" id="infoTallerSeo">
+    <div class="eyebrow">Taller Mecánico en Río Cuarto</div>
+    <h2 style="font-size:22px">Suspensión Buffali · Cuidado y Mantenimiento de tu Vehículo</h2>
+    <p class="lead" style="font-size:15px;margin:0">Especialistas en tren delantero, suspensión, amortiguadores, espirales, alineación y balanceo computarizado, rotación de cubiertas y frenos. Atención personalizada en Río Cuarto, Córdoba.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;color:var(--muted);margin-top:4px">
+      <span>📍 Humberto Primero 773, Río Cuarto</span>
+      <span>📞 (0358) 462-4013</span>
+      <span>⏰ Lunes a viernes de 8 a 16 h</span>
+    </div>
+  </section>
+</main>
+<footer id="foot"></footer>
+
+<script src="/comun.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let CFG = { taller: { nombre: 'Suspensión Buffali' }, requerirCodigo: true };
+
+function formatearInput(el) {
+  const raw = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 7);
+  el.value = formatoPatente(raw).txt;
+}
+$('#pat').addEventListener('input', e => formatearInput(e.target));
+$('#cod').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+
+function guardarPatente(p) { try { localStorage.setItem('buffali:patente', p); } catch {} }
+function patenteGuardada() { try { return localStorage.getItem('buffali:patente') || ''; } catch { return ''; } }
+
+$('#f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const m = $('#msg'); m.hidden = true;
+  const patente = $('#pat').value.replace(/\s/g, ''), codigo = $('#cod').value;
+  if (patente.length < 6) { m.textContent = 'Escribí la patente completa.'; m.hidden = false; return; }
+  if (CFG.requerirCodigo && codigo.length < 6) { m.textContent = 'El código tiene 6 caracteres. Lo encontrás en el ticket del taller.'; m.hidden = false; return; }
+  const btn = e.submitter; if (btn) btn.disabled = true;
+  try {
+    const d = await api('/api/publico/consulta', { method: 'POST', body: { patente, codigo } });
+    guardarPatente(patente); mostrar(d);
+  } catch (err) { m.textContent = err.message; m.hidden = false; }
+  if (btn) btn.disabled = false;
+});
+
+function mostrar({ vehiculo: v, ingresos }) {
+  const topV = $('#topVolver'); if (topV) topV.hidden = false;
+  const act = ingresos.find(i => i.estado !== 'entregado');
+  const ultKm = ingresos.find(i => i.km != null)?.km;
+  const prox = ingresos.find(i => i.proximo_km || i.proxima_fecha);
+  const nombre = [v.marca, v.modelo].filter(Boolean).join(' ') || 'Tu vehículo';
+  const t = CFG.taller;
+  const wa = t.whatsapp ? waLink(t.whatsapp, `Hola, consulto por mi vehículo patente ${v.patente}.`) : '';
+  $('#view').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:-6px">
+      <a href="/consulta" class="btn small" style="display:inline-flex;align-items:center;gap:6px;font-weight:600;text-decoration:none">← Volver a consultar</a>
+    </div>
+    ${act ? `<div class="status ${act.estado}" role="status"><b>${act.estado === 'listo' ? 'Tu vehículo está listo para retirar' : 'Tu vehículo está en el taller'}</b><span>Ingresó el ${fecha(act.fecha_entrada, true)}${act.km != null ? ' con ' + km(act.km) : ''}.${act.estado === 'listo' ? ' Podés pasar a buscarlo' + (t.horario ? ' en el horario ' + esc(t.horario) : '') + '.' : ' Te avisamos cuando esté listo.'}</span></div>` : ''}
+    <section class="card">
+      <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><div class="eyebrow">${v.cliente ? 'Hola, ' + esc(v.cliente) : 'Tu vehículo'}</div><h2>${esc(nombre)}</h2><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div></div>
+      <div class="facts">
+        <div><span>Visitas</span><b>${ingresos.length}</b></div>
+        <div><span>Último km registrado</span><b>${km(ultKm)}</b></div>
+        <div><span>Próximo control</span><b>${prox ? [prox.proximo_km ? km(prox.proximo_km) : '', prox.proxima_fecha ? fecha(prox.proxima_fecha) : ''].filter(Boolean).join(' / ') : '—'}</b></div>
+      </div>
+    </section>
+    <section>
+      <div class="eyebrow" style="margin:0 0 10px 2px">Historial de trabajos</div>
+      <div class="card tl">${ingresos.length ? ingresos.map(i => {
+        const n = i.fecha_salida ? dias(i.fecha_entrada, i.fecha_salida) : null;
+        return `<article class="ing">
+          <div class="head"><b>${fecha(i.fecha_entrada)}</b>${pill(i.estado)}</div>
+          <div class="meta">Entrada ${fecha(i.fecha_entrada)} · ${i.fecha_salida ? 'Salida ' + fecha(i.fecha_salida) + (n ? ` (${n} día${n === 1 ? '' : 's'})` : '') : 'Sin fecha de salida todavía'}${i.km != null ? ` · <span class="num">${km(i.km)}</span>` : ''}${i.importe != null ? ` · <span class="num">${pesos(i.importe)}</span>` : ''}</div>
+          ${i.trabajos.length || i.cambio_gomas ? `<div class="chips">${i.cambio_gomas ? `<span class="chip gomas">Cambio de gomas${i.gomas_detalle ? ': ' + esc(i.gomas_detalle) : ''}</span>` : ''}${i.trabajos.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div>` : ''}
+          ${i.observaciones ? `<div class="obs">${esc(i.observaciones)}</div>` : ''}
+        </article>`;
+      }).join('') : '<div style="padding:22px" class="muted">Todavía no hay trabajos registrados para este vehículo.</div>'}</div>
+    </section>
+    <section class="card contacto">
+      <div><b>${esc(t.nombre)}</b><div class="muted" style="font-size:14px">${esc([t.direccion, t.ciudad].filter(Boolean).join(' · '))}${t.horario ? '<br>' + esc(t.horario) : ''}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${wa ? `<a class="btn primary" href="${wa}" target="_blank" rel="noopener">Escribir por WhatsApp</a>` : ''}${t.telefono ? `<a class="btn" href="tel:${esc(t.telefono.replace(/[^\d+]/g, ''))}">Llamar ${esc(t.telefono)}</a>` : ''}${t.mapa ? `<a class="btn" href="${esc(t.mapa)}" target="_blank" rel="noopener">Cómo llegar</a>` : ''}<a class="btn" href="/consulta">Consultar otra patente</a></div>
+    </section>`;
+  document.title = `${v.patente} · ${t.nombre}`;
+  window.scrollTo(0, 0);
+}
+
+(async () => {
+  try { CFG = await api('/api/config'); } catch {}
+  const t = CFG.taller;
+  $('#tCity').textContent = t.ciudad || '';
+  $('#foot').textContent = [t.nombre, t.direccion, t.telefono].filter(Boolean).join(' · ');
+  if (CFG.requerirCodigo) $('#lead').textContent = 'Ingresá la patente y el código que figura en el ticket del taller. Vas a ver cada visita: fecha de entrada y salida, kilometraje, trabajos realizados y observaciones.';
+  else $('#codeField').hidden = true;
+  const m = location.pathname.match(/^\/a\/([A-Za-z0-9_-]+)$/);
+  const pq = new URLSearchParams(location.search).get('p');
+  if (m) {
+    try { mostrar(await api('/api/publico/a/' + m[1])); }
+    catch (err) { $('#msg').textContent = err.message; $('#msg').hidden = false; }
+  } else if (pq && !CFG.requerirCodigo) {
+    // link que manda el taller por WhatsApp: /?p=AB123CD abre el historial directo
+    $('#pat').value = pq; formatearInput($('#pat'));
+    try { const d = await api('/api/publico/consulta', { method: 'POST', body: { patente: pq } }); guardarPatente(pq); mostrar(d); }
+    catch (err) { $('#msg').textContent = err.message; $('#msg').hidden = false; }
+  } else {
+    const p = patenteGuardada(); if (p) { $('#pat').value = p; formatearInput($('#pat')); $('#cod').focus(); }
+  }
+})();
+</script>
+</body>
+</html>

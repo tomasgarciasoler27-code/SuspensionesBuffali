@@ -1,0 +1,14 @@
+services:
+  buffali:
+    build: .
+    container_name: buffali-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      # Persistencia de la base de datos SQLite en el disco del VPS
+      - ./data:/app/data
+      # Configuración del taller
+      - ./config.json:/app/config.json

@@ -1,0 +1,17 @@
+{
+  "name": "Suspensión Buffali - Historial de Vehículos",
+  "short_name": "Buffali",
+  "description": "Consultá el estado y los trabajos mecánicos realizados a tu vehículo en Suspensión Buffali.",
+  "start_url": "/consulta",
+  "display": "standalone",
+  "background_color": "#111016",
+  "theme_color": "#123A94",
+  "lang": "es-AR",
+  "icons": [
+    {
+      "src": "/icono.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}
