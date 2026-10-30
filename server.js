@@ -245,7 +245,8 @@ function serveStatic(res, file) {
   const full = path.join(PUBLIC_DIR, file);
   if (!full.startsWith(PUBLIC_DIR) || !fs.existsSync(full) || fs.statSync(full).isDirectory()) return fail(res, 404, 'No encontrado');
   const ext = path.extname(full);
-  res.writeHead(200, { ...SEC_HEADERS, 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600' });
+  const noCache = ext === '.html' || ext === '.css' || ext === '.js';
+  res.writeHead(200, { ...SEC_HEADERS, 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': noCache ? 'no-cache' : 'public, max-age=3600' });
   fs.createReadStream(full).pipe(res);
 }
 

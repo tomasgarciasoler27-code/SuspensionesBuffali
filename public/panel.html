@@ -8,12 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/estilos.css">
+<link rel="stylesheet" href="/estilos.css?v=2">
 <link rel="icon" href="/icono.png">
 <link rel="apple-touch-icon" href="/icono.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#111016">
 <style>
+.btn-trash { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border-radius: var(--r); border: 1px solid var(--danger); background: var(--danger-soft); color: var(--danger); cursor: pointer; transition: all .15s ease; flex-shrink: 0; }
+.btn-trash:hover { background: var(--danger); color: #fff; }
+.btn-trash svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
 .top { position: sticky; top: 0; z-index: 20; background: #111016; color: #F2F2F5; }
 .top .in { width: 100%; max-width: 100%; margin: 0; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
