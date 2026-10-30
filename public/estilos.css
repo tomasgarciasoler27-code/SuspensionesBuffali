@@ -51,6 +51,10 @@ h1, h2, h3 { font-family: var(--f-display); font-weight: 700; line-height: 1.05;
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn.primary:hover { filter: brightness(1.08); }
 .btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+.btn.danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+.btn-trash { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border-radius: var(--r); border: 1px solid var(--danger); background: var(--danger-soft); color: var(--danger); cursor: pointer; transition: all .15s ease; flex-shrink: 0; }
+.btn-trash:hover { background: var(--danger); color: #fff; }
+.btn-trash svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
 .btn.ghost { background: transparent; border-color: transparent; }
 .btn.small { padding: 6px 11px; font-size: 14px; }
 .btn:disabled { opacity: .55; cursor: not-allowed; }

@@ -171,15 +171,19 @@ function historial(vehiculoId, publico) {
   return db.prepare('SELECT * FROM ingresos WHERE vehiculo_id = ? ORDER BY fecha_entrada DESC, id DESC').all(vehiculoId).map(r => filaIngreso(r, publico));
 }
 
-// ---------- inicialización del primer usuario ----------
+// ---------- inicialización del usuario administrador ----------
 (async () => {
-  const hayUsuarios = db.prepare('SELECT COUNT(*) AS n FROM usuarios').get().n > 0;
-  if (!hayUsuarios) {
-    if (process.env.ADMIN_USUARIO && process.env.ADMIN_CLAVE) {
+  if (process.env.ADMIN_USUARIO && process.env.ADMIN_CLAVE) {
+    const adminUser = process.env.ADMIN_USUARIO.trim().toLowerCase();
+    const existe = db.prepare('SELECT id FROM usuarios WHERE usuario = ?').get(adminUser);
+    if (!existe) {
       const hash = await hashClave(process.env.ADMIN_CLAVE);
-      db.prepare('INSERT INTO usuarios (usuario, nombre, clave_hash) VALUES (?, ?, ?)').run(process.env.ADMIN_USUARIO.toLowerCase(), 'Administrador', hash);
-      console.log(`Usuario inicial "${process.env.ADMIN_USUARIO}" creado.`);
-    } else {
+      db.prepare('INSERT INTO usuarios (usuario, nombre, clave_hash) VALUES (?, ?, ?)').run(adminUser, 'Administrador', hash);
+      console.log(`Usuario inicial "${adminUser}" creado.`);
+    }
+  } else {
+    const hayUsuarios = db.prepare('SELECT COUNT(*) AS n FROM usuarios').get().n > 0;
+    if (!hayUsuarios) {
       console.warn('No hay usuarios en la base de datos. Creá uno con: node --experimental-sqlite crear-usuario.js <usuario> <clave> [nombre]');
     }
   }
@@ -334,11 +338,9 @@ async function api(req, res, url) {
   if (p === '/api/resumen' && m === 'GET') {
     const enTaller = db.prepare(`SELECT i.*, v.patente, v.marca, v.modelo, v.cliente, v.telefono, v.id AS vid FROM ingresos i JOIN vehiculos v ON v.id = i.vehiculo_id WHERE i.estado IN ('en_taller','listo') ORDER BY i.estado DESC, i.fecha_entrada ASC`).all()
       .map(r => ({ ...filaIngreso(r, false), vehiculo: { id: r.vid, patente: r.patente, marca: r.marca, modelo: r.modelo, cliente: r.cliente, telefono: r.telefono } }));
-    const recientes = db.prepare(`SELECT i.*, v.patente, v.marca, v.modelo, v.cliente, v.id AS vid FROM ingresos i JOIN vehiculos v ON v.id = i.vehiculo_id WHERE i.estado = 'entregado' ORDER BY COALESCE(i.fecha_salida, i.fecha_entrada) DESC, i.id DESC LIMIT 50`).all()
-      .map(r => ({ ...filaIngreso(r, false), vehiculo: { id: r.vid, patente: r.patente, marca: r.marca, modelo: r.modelo, cliente: r.cliente } }));
-    const cantEntregados = db.prepare(`SELECT COUNT(*) AS n FROM vehiculos v WHERE (SELECT estado FROM ingresos WHERE vehiculo_id = v.id ORDER BY fecha_entrada DESC, id DESC LIMIT 1) = 'entregado'`).get().n;
+    const cantEntregados = db.prepare(`SELECT COUNT(*) AS n FROM vehiculos v WHERE COALESCE((SELECT estado FROM ingresos WHERE vehiculo_id = v.id ORDER BY fecha_entrada DESC, id DESC LIMIT 1), 'entregado') = 'entregado'`).get().n;
     const totales = db.prepare('SELECT (SELECT COUNT(*) FROM vehiculos) AS vehiculos, (SELECT COUNT(*) FROM ingresos) AS ingresos').get();
-    return send(res, 200, { enTaller, recientes, totales, cantEntregados });
+    return send(res, 200, { enTaller, totales, cantEntregados });
   }
 
   // búsqueda y listado de vehículos
@@ -385,13 +387,6 @@ async function api(req, res, url) {
       return send(res, 200, filaVehiculo(db.prepare('SELECT * FROM vehiculos WHERE id = ?').get(v.id), false));
     }
     if (m === 'DELETE') { db.prepare('DELETE FROM vehiculos WHERE id = ?').run(v.id); return send(res, 200, { ok: true }); }
-  }
-  mt = p.match(/^\/api\/vehiculos\/(\d+)\/nuevo-codigo$/);
-  if (mt && m === 'POST') {
-    const id = Number(mt[1]);
-    db.prepare('UPDATE vehiculos SET codigo = ?, token = ? WHERE id = ?').run(nuevoCodigo(), nuevoToken(), id);
-    const v = db.prepare('SELECT * FROM vehiculos WHERE id = ?').get(id);
-    return v ? send(res, 200, filaVehiculo(v, false)) : fail(res, 404, 'Ese vehículo no existe.');
   }
 
   // ingresos

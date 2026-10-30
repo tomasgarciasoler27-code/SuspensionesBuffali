@@ -69,22 +69,15 @@ Después `certbot --nginx` para el certificado. **`BASE_URL` en `.env` tiene que
 
 ### Usuarios del panel
 ```bash
-node crear-usuario.js mecanico1 unaClaveSegura "Juan"
+node --experimental-sqlite crear-usuario.js mecanico1 unaClaveSegura "Juan"
 ```
-Si el usuario ya existe, le cambia la clave. Cada usuario también puede cambiar su clave desde el panel (botón **Más**).
+Si el usuario ya existe, le cambia la clave.
 
 ### Backup
 Todo está en **`data/taller.db`** (un solo archivo). Hay que copiarlo seguido a otro lado, por ejemplo con un cron diario:
 ```bash
 0 3 * * * sqlite3 /opt/buffali/data/taller.db ".backup '/backups/taller-$(date +\%F).db'"
 ```
-Desde el panel también se puede bajar todo a Excel/CSV (**Más → Descargar todo el historial**).
-
-### Probar con datos de ejemplo
-```bash
-node datos-ejemplo.js    # carga 4 autos de prueba e imprime sus códigos
-```
-Usarlo solo en una copia de prueba, no en el servidor real.
 
 ---
 

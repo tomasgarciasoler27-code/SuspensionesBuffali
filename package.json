@@ -8,7 +8,6 @@
   "scripts": {
     "start": "node --experimental-sqlite server.js",
     "test": "node --experimental-sqlite test.js",
-    "ejemplo": "node --experimental-sqlite datos-ejemplo.js",
     "crear-usuario": "node --experimental-sqlite crear-usuario.js"
   }
 }

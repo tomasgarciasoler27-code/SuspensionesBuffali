@@ -16,8 +16,7 @@
 <style>
 .top { position: sticky; top: 0; z-index: 20; background: #111016; color: #F2F2F5; }
 .top .in { width: 100%; max-width: 100%; margin: 0; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; }
-.brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: inherit; }
-.brand { align-items: center !important; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
 .brand img { height: 40px; width: auto; display: block; }
 .brand span { font-size: 13px; opacity: .7; }
 .nav-tabs { display: flex; gap: 6px; align-items: center; }
@@ -60,9 +59,6 @@ main { max-width: 1160px; margin: 0 auto; padding: 22px max(16px, env(safe-area-
 .dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 18px; margin-top: 16px; }
 .dl div span { display: block; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
 .dl div b { font-weight: 600; overflow-wrap: anywhere; }
-.acceso { display: grid; gap: 12px; }
-.code { font: 600 30px var(--f-mono); letter-spacing: .18em; }
-.linkbox { font: 12px var(--f-mono); word-break: break-all; color: var(--muted); }
 
 /* historial */
 .tl { display: grid; }
@@ -80,7 +76,6 @@ main { max-width: 1160px; margin: 0 auto; padding: 22px max(16px, env(safe-area-
 /* formularios */
 .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.full { grid-column: 1 / -1; }
 @media (max-width: 620px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
 .checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
 .checks label { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); font-size: 15px; cursor: pointer; }
@@ -103,13 +98,6 @@ dialog h2 { font-size: 26px; }
 .login-logo img { height: 64px; width: auto; }
 .login form.card { overflow: hidden; }
 .login h1 { font-size: 34px; text-transform: uppercase; letter-spacing: .03em; }
-
-/* ticket impreso */
-#print { display: none; }
-@media print {
-  body { background: #fff; color: #000; }
-  .top, main, dialog { display: none !important; }
-}
 </style>
 </head>
 <body>
@@ -147,6 +135,7 @@ dialog h2 { font-size: 26px; }
 const $ = s => document.querySelector(s);
 const V = $('#view');
 const S = { cfg: null, yo: null, vehiculo: null, ingresos: [] };
+const TRASH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
 
 /* ---------- arranque ---------- */
 async function init() {
@@ -175,10 +164,10 @@ function actualizarBadges(d) {
   if (!d) return;
   const enTaller = d.enTaller ? d.enTaller.filter(i => i.estado === 'en_taller').length : 0;
   const listos = d.enTaller ? d.enTaller.filter(i => i.estado === 'listo').length : 0;
-  const entregados = d.cantEntregados != null ? d.cantEntregados : (d.recientes ? d.recientes.length : 0);
+  const entregados = d.cantEntregados ?? 0;
   const bTaller = $('#badge-en-taller'); if (bTaller) bTaller.textContent = enTaller;
   const bListos = $('#badge-listos'); if (bListos) bListos.textContent = listos;
-  const bHistorial = $('#badge-historial') || $('#badge-entregados'); if (bHistorial) bHistorial.textContent = entregados;
+  const bHistorial = $('#badge-historial'); if (bHistorial) bHistorial.textContent = entregados;
 }
 function marcarTabActiva(tab) {
   document.querySelectorAll('.nav-tab').forEach(el => {
@@ -198,14 +187,11 @@ function route() {
   const h = location.hash.slice(1);
   let m;
   if ((m = h.match(/^v\/(\d+)$/))) { marcarTabActiva(null); return verVehiculo(+m[1]); }
-  if ((m = h.match(/^buscar\/(.*)$/))) { marcarTabActiva(null); return buscar(decodeURIComponent(m[1])); }
   if (h === 'listos') { marcarTabActiva('listos'); return verSeccion('listos'); }
   if (h === 'historial' || h === 'entregados') { marcarTabActiva('historial'); return verSeccion('historial'); }
   marcarTabActiva('en-taller');
   return verSeccion('en-taller');
 }
-$('#searchForm')?.addEventListener('submit', e => { e.preventDefault(); const q = $('#q')?.value.trim(); if (q) location.hash = 'buscar/' + encodeURIComponent(q); });
-$('#btnNuevoDirecto')?.addEventListener('click', () => abrirVehiculo({}));
 
 /* ---------- vistas por sección ---------- */
 async function verSeccion(seccion) {
@@ -237,6 +223,7 @@ async function verSeccion(seccion) {
         <select data-estado="${i.id}" aria-label="Estado de ${esc(i.vehiculo.patente)}">
           ${['en_taller', 'listo', 'entregado'].map(e => `<option value="${e}"${e === i.estado ? ' selected' : ''}>${ESTADO_TXT[e]}</option>`).join('')}
         </select>
+        <button class="btn-trash" type="button" data-del-ingreso="${i.id}" title="Eliminar ingreso" aria-label="Eliminar ingreso de ${esc(i.vehiculo.patente)}">${TRASH_ICON}</button>
       </div>
     </div>`;
   };
@@ -273,6 +260,7 @@ async function verSeccion(seccion) {
           <div class="act">
             ${pill('entregado')}
             <button class="btn small primary" data-cargar-ingreso="${v.id}">+ Cargar ingreso</button>
+            <button class="btn-trash" type="button" data-del-vehiculo="${v.id}" title="Eliminar vehículo" aria-label="Eliminar vehículo ${esc(v.patente)}">${TRASH_ICON}</button>
           </div>
         </div>
       `).join('');
@@ -290,7 +278,7 @@ async function verSeccion(seccion) {
         <div class="card list" id="contHist">${renderItems(vehiculos)}</div>
       </section>`;
 
-    const enlazarCargarIngreso = (lista) => {
+    const enlazarAccionesHistorial = (lista) => {
       V.querySelectorAll('[data-cargar-ingreso]').forEach(btn => {
         btn.onclick = () => {
           const veh = lista.find(x => x.id == btn.dataset.cargarIngreso);
@@ -301,8 +289,21 @@ async function verSeccion(seccion) {
           }
         };
       });
+      V.querySelectorAll('[data-del-vehiculo]').forEach(btn => {
+        btn.onclick = async () => {
+          const veh = lista.find(x => x.id == btn.dataset.delVehiculo);
+          if (!veh) return;
+          if (!confirm(`¿Eliminar el vehículo ${veh.patente} (${[veh.marca, veh.modelo].filter(Boolean).join(' ') || 'sin modelo'}) y todo su historial?`)) return;
+          try {
+            await api('/api/vehiculos/' + veh.id, { method: 'DELETE' });
+            verSeccion('historial');
+          } catch (err) {
+            if (!onAuthError(err)) alertBox(err.message);
+          }
+        };
+      });
     };
-    enlazarCargarIngreso(vehiculos);
+    enlazarAccionesHistorial(vehiculos);
 
     $('#filtroHist')?.addEventListener('input', e => {
       const q = e.target.value.toLowerCase().trim();
@@ -312,7 +313,7 @@ async function verSeccion(seccion) {
         `${v.marca || ''} ${v.modelo || ''}`.toLowerCase().includes(q)
       );
       $('#contHist').innerHTML = renderItems(filtrados);
-      enlazarCargarIngreso(filtrados);
+      enlazarAccionesHistorial(filtrados);
     });
   } else {
     V.innerHTML = `
@@ -324,7 +325,7 @@ async function verSeccion(seccion) {
             <div class="stats"><div><b>${enTaller.length}</b>en trabajo</div><div><b>${listos.length}</b>listos para retirar</div><div><b>${d.totales.vehiculos}</b>vehículos registrados</div></div>
           </div>
         </div>
-        <div class="card list">${enTaller.length ? enTaller.map(fila).join('') : '<div class="empty">No hay vehículos en trabajo. Podés tocar el botón "+ Cargar ingreso" o buscar una patente arriba.</div>'}</div>
+        <div class="card list">${enTaller.length ? enTaller.map(fila).join('') : '<div class="empty">No hay vehículos en trabajo. Podés tocar el botón "+ Cargar ingreso" para registrar uno.</div>'}</div>
       </section>`;
     $('#btnSecNuevo')?.addEventListener('click', () => abrirVehiculo({}));
   }
@@ -340,27 +341,22 @@ async function verSeccion(seccion) {
       if (!onAuthError(err)) alertBox(err.message);
     }
   }));
+
+  V.querySelectorAll('[data-del-ingreso]').forEach(btn => {
+    btn.onclick = async () => {
+      const i = d.enTaller.find(x => x.id == btn.dataset.delIngreso);
+      if (!i) return;
+      if (!confirm(`¿Eliminar el ingreso actual de ${i.vehiculo.patente}?`)) return;
+      try {
+        await api('/api/ingresos/' + i.id, { method: 'DELETE' });
+        verSeccion(seccion);
+      } catch (err) {
+        if (!onAuthError(err)) alertBox(err.message);
+      }
+    };
+  });
 }
 function alertBox(t) { const m = document.createElement('div'); m.className = 'msg err'; m.textContent = t; V.prepend(m); setTimeout(() => m.remove(), 6000); }
-
-/* ---------- búsqueda ---------- */
-const PAT_RE = /^([A-Z]{3}\d{3}|[A-Z]{2}\d{3}[A-Z]{2}|[A-Z]\d{3}[A-Z]{3}|\d{3}[A-Z]{3})$/;
-async function buscar(q) {
-  $('#q').value = q;
-  V.innerHTML = '<div class="empty">Buscando…</div>';
-  let rows; try { rows = await api('/api/vehiculos?q=' + encodeURIComponent(q)); } catch (err) { if (!onAuthError(err)) V.innerHTML = `<div class="msg err">${esc(err.message)}</div>`; return; }
-  const pat = q.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  const exacto = rows.find(r => r.patente === pat);
-  if (exacto && rows.length === 1) { location.replace('#v/' + exacto.id); return; }
-  const puedeCrear = PAT_RE.test(pat) && !exacto;
-  V.innerHTML = `
-    <section>
-      <div class="sec-h"><h2>Resultados para “${esc(q)}”</h2></div>
-      ${puedeCrear ? `<div class="card pad" style="display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;margin-bottom:16px">${chapa(pat)}<div style="flex:1;min-width:200px"><b>Esta patente no está registrada.</b><div class="muted">Cargá el vehículo para registrar su primer ingreso.</div></div><button class="btn primary" id="btnNuevoV">Registrar vehículo</button></div>` : ''}
-      <div class="card list">${rows.length ? rows.map(v => `<a class="item" href="#v/${v.id}">${chapa(v.patente, 'sm')}<div class="who"><b>${esc([v.marca, v.modelo, v.anio].filter(Boolean).join(' ') || 'Sin modelo')}</b><span>${esc(v.cliente || 'Sin cliente')}</span></div><div class="when">${v.ingresos} ingreso${v.ingresos == 1 ? '' : 's'}${v.ultimo ? ' · último ' + fecha(v.ultimo) : ''}</div><div class="act"></div></a>`).join('') : `<div class="empty">${puedeCrear ? 'No hay otros vehículos parecidos.' : 'No encontramos nada. Para registrar un vehículo nuevo, escribí la patente completa (ej. AB123CD o ABC123).'}</div>`}</div>
-    </section>`;
-  $('#btnNuevoV')?.addEventListener('click', () => abrirVehiculo({ patente: pat }));
-}
 
 /* ---------- ficha ---------- */
 async function verVehiculo(id) {
@@ -377,7 +373,7 @@ async function verVehiculo(id) {
     V.innerHTML = `
       <div class="ficha">
         <section class="card pad">
-          <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><h1>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || 'Vehículo sin modelo')}</h1><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div>${act ? pill(act.estado) : ''}</div>
+          <div class="vhead">${chapa(v.patente, 'lg')}<div style="min-width:0;flex:1"><h1>${esc([v.marca, v.modelo].filter(Boolean).join(' ') || 'Vehículo sin modelo')}</h1><div class="muted">${esc([v.anio, v.color].filter(Boolean).join(' · '))}</div></div>${act ? `<div style="display:flex;align-items:center;gap:8px">${pill(act.estado)}<button class="btn-trash" type="button" id="btnDelIngresoAct" title="Eliminar ingreso" aria-label="Eliminar ingreso actual">${TRASH_ICON}</button></div>` : ''}</div>
           <div class="dl">
             <div><span>Cliente</span><b>${esc(v.cliente || '—')}</b></div>
             <div><span>Teléfono</span><b>${esc(v.telefono || '—')}</b></div>
@@ -399,7 +395,31 @@ async function verVehiculo(id) {
     if ($('#btnIngreso')) $('#btnIngreso').onclick = abrirAct;
     if ($('#btnIngreso2')) $('#btnIngreso2').onclick = () => abrirIngreso(null);
     if ($('#btnEditarV')) $('#btnEditarV').onclick = () => abrirVehiculo(v);
+    if ($('#btnDelIngresoAct') && act) {
+      $('#btnDelIngresoAct').onclick = async () => {
+        if (!confirm(`¿Eliminar el ingreso actual de ${v.patente}?`)) return;
+        try {
+          await api('/api/ingresos/' + act.id, { method: 'DELETE' });
+          actualizarBadgesRemoto();
+          verVehiculo(v.id);
+        } catch (err) {
+          if (!onAuthError(err)) alertBox(err.message);
+        }
+      };
+    }
     V.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => abrirIngreso(S.ingresos.find(i => i.id == b.dataset.edit)));
+    V.querySelectorAll('[data-del-ing]').forEach(b => {
+      b.onclick = async () => {
+        if (!confirm('¿Eliminar este ingreso?')) return;
+        try {
+          await api('/api/ingresos/' + b.dataset.delIng, { method: 'DELETE' });
+          actualizarBadgesRemoto();
+          verVehiculo(v.id);
+        } catch (err) {
+          if (!onAuthError(err)) alertBox(err.message);
+        }
+      };
+    });
   } else if (esListo) {
     // Vista para "Listos para retirar": solo lectura informativa y botón de WhatsApp con detalle
     const waListo = v.telefono ? waLink(v.telefono, mensajeListoWhatsApp({ ...act, vehiculo: v })) : '';
@@ -484,7 +504,7 @@ function ingresoHTML(i, puedeEditar = true) {
         <span class="num">${km(i.km)}</span>
         ${i.importe != null ? `<span class="num">${pesos(i.importe)}</span>` : ''}
         <span>${i.creado_por ? 'Cargó ' + esc(i.creado_por) : ''}</span>
-        ${puedeEditar ? `<button class="btn small" data-edit="${i.id}" style="margin-left:auto">Editar</button>` : ''}
+        ${puedeEditar ? `<div style="margin-left:auto;display:flex;gap:8px;align-items:center"><button class="btn small" type="button" data-edit="${i.id}">Editar</button><button class="btn-trash" type="button" data-del-ing="${i.id}" title="Eliminar ingreso" aria-label="Eliminar ingreso">${TRASH_ICON}</button></div>` : ''}
       </div>
       ${i.trabajos.length || i.cambio_gomas ? `<div class="chips">${i.cambio_gomas ? `<span class="chip gomas">Cambio de gomas${i.gomas_detalle ? ': ' + esc(i.gomas_detalle) : ''}</span>` : ''}${i.trabajos.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>` : ''}
       ${i.observaciones ? `<div class="obs">${esc(i.observaciones)}</div>` : ''}
@@ -580,7 +600,7 @@ function abrirIngreso(i) {
   };
   const del = $('#iDel'); if (del) del.onclick = async () => {
     if (del.dataset.c !== '1') { del.dataset.c = '1'; del.textContent = 'Tocá de nuevo para eliminar'; return; }
-    try { await api('/api/ingresos/' + i.id, { method: 'DELETE' }); dlg.close(); verVehiculo(v.id); } catch (err) { $('#iMsg').textContent = err.message; $('#iMsg').hidden = false; }
+    try { await api('/api/ingresos/' + i.id, { method: 'DELETE' }); actualizarBadgesRemoto(); dlg.close(); verVehiculo(v.id); } catch (err) { $('#iMsg').textContent = err.message; $('#iMsg').hidden = false; }
   };
   f.onsubmit = async e => {
     e.preventDefault();
@@ -595,7 +615,7 @@ function abrirIngreso(i) {
     if (body.estado === 'entregado' && !body.fecha_salida) body.fecha_salida = hoyISO();
     try {
       await api(nuevo ? `/api/vehiculos/${v.id}/ingresos` : '/api/ingresos/' + i.id, { method: nuevo ? 'POST' : 'PUT', body });
-      if (nuevo && !S.ingresos.length) S.sugerirLink = v.id;
+      actualizarBadgesRemoto();
       dlg.close(); verVehiculo(v.id);
     } catch (err) { $('#iMsg').textContent = err.message; $('#iMsg').hidden = false; }
   };

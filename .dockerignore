@@ -4,3 +4,6 @@ node_modules
 .env
 data
 *.log
+*.docx
+test.js
+LEEME.md
